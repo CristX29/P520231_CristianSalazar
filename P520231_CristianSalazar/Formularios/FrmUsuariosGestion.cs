@@ -39,8 +39,10 @@ namespace P520231_CristianSalazar.Formularios
         {
             //Definimos el padre MDI
             MdiParent = Globales.MiFormPrincipal;
+
             CargarListaRoles();
             CargarListaDeUsuarios();
+            ActivarAgregar();
         }
 
         private void CargarListaDeUsuarios()
@@ -111,7 +113,9 @@ namespace P520231_CristianSalazar.Formularios
 
             if (DgLista.SelectedRows.Count == 1)
             {
-                //TO DO Limpiar el form
+                LimpiarFormulario();
+
+
 
 
                 //de la coleccion de filas selecionadas(que en este caso es solo una)
@@ -150,7 +154,7 @@ namespace P520231_CristianSalazar.Formularios
                     //combobox
                     CbRolesUsuario.SelectedValue = MiUsuarioLocal.MiRolTipo.UsuarioRolId;
 
-                    // TO DO: DESACTIVAR BOTONES NO NECESARIOS EN ESTE CASO AGREGAR
+                    ActivarEditarEliminar();
                 }
 
 
@@ -162,6 +166,8 @@ namespace P520231_CristianSalazar.Formularios
         private void BtnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarFormulario();
+            DgLista.ClearSelection();
+            ActivarAgregar();
         }
         private void LimpiarFormulario()
         {
@@ -179,7 +185,25 @@ namespace P520231_CristianSalazar.Formularios
 
 
         }
-        private bool ValidarDatosDigitados()
+
+        private void ActivarAgregar()
+        {
+            BtnAgregar.Enabled = true;
+            BtnModificar.Enabled = false;
+            BtnEliminar.Enabled = false;
+
+        }
+
+        private void ActivarEditarEliminar()
+        {
+            BtnAgregar.Enabled = false;
+            BtnModificar.Enabled = true;
+            BtnEliminar.Enabled = true;
+        }
+
+
+
+        private bool ValidarDatosDigitados(bool OmitirPassword = false)
         {
             //evalua que se hayan digitado los campos de texto en el formulario
             bool R = false;
@@ -188,10 +212,38 @@ namespace P520231_CristianSalazar.Formularios
                 !string.IsNullOrEmpty(TxtUsuarioCedula.Text.Trim()) &&
                 !string.IsNullOrEmpty(TxtUsuarioTelefono.Text.Trim()) &&
                 !string.IsNullOrEmpty(TxtUsuarioCorreo.Text.Trim()) &&
-                !string.IsNullOrEmpty(TxtUsuarioContrasennia.Text.Trim()) &&
+
                 CbRolesUsuario.SelectedIndex > -1)
             {
-                R = true;
+
+                if (OmitirPassword)
+                {
+                    //PARA EDITAR Si el password se omite, ya paso la evaluacion a este punto, retorna true
+                    R = true;
+                }
+                else
+                {
+                    //PARA AGREGAR en caso en el que haya que evaluar el password sebe agregar otra condicion
+                    //logica
+                    if (!string.IsNullOrEmpty(TxtUsuarioContrasennia.Text.Trim()))
+                    {
+                        R = true;
+                    }
+                    else
+                    {
+
+                        //en el caso en el que haga falta la contraseña, se le indica al usuario
+                        //CONTRASEÑA
+
+                        MessageBox.Show("Debe digitar una contraseña para el usuario", "Error de Validacion", MessageBoxButtons.OK);
+                        TxtUsuarioContrasennia.Focus();
+                        return false;
+
+
+                    }
+
+
+                }
 
             }
             else
@@ -229,14 +281,7 @@ namespace P520231_CristianSalazar.Formularios
                     return false;
 
                 }
-                //CONTRASEÑA
-                if (string.IsNullOrEmpty(TxtUsuarioContrasennia.Text.Trim()))
-                {
-                    MessageBox.Show("Debe digitar una contraseña para el usuario", "Error de Validacion", MessageBoxButtons.OK);
-                    TxtUsuarioContrasennia.Focus();
-                    return false;
 
-                }
                 //ROL DE USUARIO
                 if (CbRolesUsuario.SelectedIndex == -1)
                 {
@@ -362,5 +407,98 @@ namespace P520231_CristianSalazar.Formularios
 
         }
 
+        private void DgLista_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void BtnModificar_Click(object sender, EventArgs e)
+        {
+            if (ValidarDatosDigitados(true))
+            {
+                // NO ES NECESARIO CAPTURAR EL ID DESDE EL CUADRO DE TEXTO YA QUE
+                //AL CONSULTARLO (CUANDO SELECCIONAMOS EL USUARIO DEL DATAGRID), YA
+                //TENEMOS DATOS EN EL ID
+                //ESTE ID NO PUEDE SER MODIFICADO, LOS DEMAS TRIBUTOS SI
+
+                MiUsuarioLocal.UsuarioNombre = TxtUsuarioNombre.Text.Trim();
+                MiUsuarioLocal.UsuarioCedula = TxtUsuarioCedula.Text.Trim();
+                MiUsuarioLocal.UsuarioTelefono = TxtUsuarioTelefono.Text.Trim();
+                MiUsuarioLocal.UsuarioCorreo = TxtUsuarioCorreo.Text.Trim();
+                //Como el cuadro de texto de la contraseña tiene un caracter en blanco,
+                //puedo asignar sin problema el valor del cuadro de texto al atributo en el SP
+                //se evalua si tiene o no datos.
+                MiUsuarioLocal.UsuarioContrasennia = TxtUsuarioContrasennia.Text.Trim();
+                MiUsuarioLocal.MiRolTipo.UsuarioRolId = Convert.ToInt32(CbRolesUsuario.SelectedValue);
+                MiUsuarioLocal.UsuarioDireccion = TxtUsuarioDireccion.Text.Trim();
+
+                //segun el diagrama de casos de uso expandido y la secuencia normal para un CRUD (editar)
+                //Es habitual consultar por ID el item que se va a modificar para asegurarse que
+                //en el lapso de tiempo entre que se selecciono el usuario y se modificaron los datos
+                //en pantalla, aun exista el registro en la BD. (existe una posibilidad de que ya no exista
+                //debido a que en entornos donde hayan muchos usuarios trabajando en el sistema algun otro
+                //este modificando el mismo registro, esto se llama concurrencia.
+
+                if (MiUsuarioLocal.ConsultarPorID())
+                {
+                    DialogResult respuesta = MessageBox.Show("¿Está seguro de modificar el usuario?", "???",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    if (respuesta == DialogResult.Yes)
+                    {
+                        if (MiUsuarioLocal.Editar())
+
+                        {
+                            MessageBox.Show("El usuario se modifico correctamente", ":)", MessageBoxButtons.OK);
+                            LimpiarFormulario();
+                            CargarListaDeUsuarios();
+
+                        }
+
+
+
+                    }
+
+
+
+                }
+
+            }
+
+        }
+
+        private void BtnEliminar_Click(object sender, EventArgs e)
+        {
+            if (MiUsuarioLocal.UsuarioID > 0 && MiUsuarioLocal.ConsultarPorID() )
+            {
+                //tomando en cuenta que puedo estar viendo los usuarios activos o inactivos
+                //este boton podria servir tanto para activar como desactivar los usuarios
+                //El checkbox de la parte superior del form me sirve para identificar esta accion
+                if (CboxVerActivos.Checked)
+                {
+                    //DESACTIVAR USUARIO
+                    DialogResult r = MessageBox.Show("¿Está seguro de eliminar el usuario?", "???",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    if (r == DialogResult.Yes)
+                    {
+                        if (MiUsuarioLocal.Eliminar())
+                        {
+                            MessageBox.Show("El Usuario ha sido eliminado correctamente", "!!!", MessageBoxButtons.OK);
+                            LimpiarFormulario();
+                            CargarListaDeUsuarios();
+                        }
+                    }
+
+                }
+                else
+                {
+                    //ACTIVAR USUARIO
+                }
+
+            }
+
+
+        }
     }
 }

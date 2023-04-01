@@ -87,6 +87,31 @@ namespace Logica.Models
         {
             bool R = false;
 
+            Conexion MiCnn = new Conexion();
+
+            //TODO ENCRIPTAR CONTRASENNIA
+
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Correo", this.UsuarioCorreo));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Contrasennia", this.UsuarioContrasennia));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Nombre", this.UsuarioNombre));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Cedula", this.UsuarioCedula));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Telefono", this.UsuarioTelefono));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Direccion", this.UsuarioDireccion));
+           
+             
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@IdRol", this.MiRolTipo.UsuarioRolId));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ID", this.UsuarioID));
+
+            int resultado = MiCnn.EjecutarInsertUpdateDelete("SPUsuarioModificar");
+
+            
+            if (resultado > 0)
+            {
+                R = true;
+            }
+
+
+
 
             return R;
         
@@ -101,7 +126,15 @@ namespace Logica.Models
         {
 
             bool R = false;
+            
+            Conexion MiCnn = new Conexion();
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ID", this.UsuarioID));
 
+            int respuesta = MiCnn.EjecutarInsertUpdateDelete("SPUsuarioDesactivar");
+            if (respuesta > 0)
+            {
+                R = true;
+            }
 
             return R;
 
@@ -113,6 +146,19 @@ namespace Logica.Models
         public bool ConsultarPorID()
         {
             bool R = false;
+
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ID", this.UsuarioID));
+            //NECESITO UN DATATABLE PARA CAPTURAR LA INFO DEL USUARIO
+            DataTable dt = new DataTable();
+
+            dt = MiCnn.EjecutarSELECT("SPUsuarioConsultarPorID");
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                R = true;
+            }
 
 
             return R;
