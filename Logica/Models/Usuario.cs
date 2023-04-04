@@ -55,10 +55,12 @@ namespace Logica.Models
             //pasos 1.6.1 y 1.6.2
             Conexion MiCnn= new Conexion();
 
-            //TODO ENCRIPTAR CONTRASENNIA
+            //ENCRIPTAR CONTRASENNIA
+            Crypto MiEncriptador= new Crypto();
+            string ContrasenniaEncriptada = MiEncriptador.EncriptarEnUnSentido(this.UsuarioContrasennia);
 
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Correo", this.UsuarioCorreo));
-            MiCnn.ListaDeParametros.Add(new SqlParameter("@Contrasennia", this.UsuarioContrasennia));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Contrasennia", ContrasenniaEncriptada));
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Nombre", this.UsuarioNombre));
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Cedula", this.UsuarioCedula));
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Telefono", this.UsuarioTelefono));
@@ -90,9 +92,12 @@ namespace Logica.Models
             Conexion MiCnn = new Conexion();
 
             //TODO ENCRIPTAR CONTRASENNIA
+            //ENCRIPTAR CONTRASENNIA
+            Crypto MiEncriptador = new Crypto();
+            string ContrasenniaEncriptada = MiEncriptador.EncriptarEnUnSentido(this.UsuarioContrasennia);
 
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Correo", this.UsuarioCorreo));
-            MiCnn.ListaDeParametros.Add(new SqlParameter("@Contrasennia", this.UsuarioContrasennia));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Contrasennia", ContrasenniaEncriptada));
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Nombre", this.UsuarioNombre));
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Cedula", this.UsuarioCedula));
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Telefono", this.UsuarioTelefono));
@@ -143,8 +148,25 @@ namespace Logica.Models
 
         }
 
-        public bool ConsultarPorID()
+        public bool Activar()
         {
+            bool R=false;
+
+            Conexion MiCnn = new Conexion();
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ID", this.UsuarioID));
+
+            int respuesta = MiCnn.EjecutarInsertUpdateDelete("SPUsuarioActivar");
+            if (respuesta > 0)
+            {
+                R = true;
+            }
+
+            return R;
+        }
+        
+
+
+            public bool ConsultarPorID() { 
             bool R = false;
 
             Conexion MiCnn = new Conexion();
@@ -269,8 +291,9 @@ namespace Logica.Models
 
         
 
-        public DataTable ListarActivos()
+        public DataTable ListarActivos(string pFiltroBusqueda)
         {
+
             DataTable R = new DataTable();
 
             Conexion MiCnn = new Conexion();
@@ -278,16 +301,25 @@ namespace Logica.Models
             //debemos definir ese parametro en la lista de parametros del objeto de conexión
 
             MiCnn.ListaDeParametros.Add(new SqlParameter("@VerActivos", true));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@FiltroBusqueda", pFiltroBusqueda));
             R = MiCnn.EjecutarSELECT("SPUsuariosListar"); 
 
             return R;
 
         }
-        public DataTable ListarInactivos()
+        public DataTable ListarInactivos(string pFiltroBusqueda)
         {
             DataTable R = new DataTable();
 
+            Conexion MiCnn = new Conexion();
+            //en este caso como el procedimiento almacenado tiene un parametro
+            //debemos definir ese parametro en la lista de parametros del objeto de conexión
 
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@VerActivos", false));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@FiltroBusqueda", pFiltroBusqueda));
+            R = MiCnn.EjecutarSELECT("SPUsuariosListar");
+
+            return R;
             return R;
 
         }
