@@ -34,5 +34,52 @@ namespace P520231_CristianSalazar.Formularios
 
             }
         }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FrmMDI_Load(object sender, EventArgs e)
+        {
+
+            //mostrar el usuario logueado
+
+            string InfoUsuario = string.Format("{0}-{1}({2}) ", Globales.MiUsuarioGlobal.UsuarioNombre,
+                                                                Globales.MiUsuarioGlobal.UsuarioCorreo,
+                                                                Globales.MiUsuarioGlobal.MiRolTipo.UsuarioRolDescripcion);
+            LblUsuario.Text = InfoUsuario;
+
+            switch (Globales.MiUsuarioGlobal.MiRolTipo.UsuarioRolId)
+            {
+                case 1:
+                    break;
+                    //seria admin no se oculta nada
+                    case 2:
+                    //seria usuario normal , se deben ocultar algunas opciones de menu
+                    gestionDeUsuariosToolStripMenuItem.Visible = false;
+                    rolesDeUsuarioToolStripMenuItem.Visible = false;
+                    tipoToolStripMenuItem.Visible = false;
+                    tipoDeCompraToolStripMenuItem.Visible = false;
+                    break;
+            }
+
+
+
+
+
+
+
+        }
+
+        private void registroDeComprasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!Globales.MiFormRegistroCompra.Visible)
+            {
+                Globales.MiFormRegistroCompra = new FrmRegistroCompra();
+                Globales.MiFormRegistroCompra.Show();
+
+            }
+        }
     }
 }

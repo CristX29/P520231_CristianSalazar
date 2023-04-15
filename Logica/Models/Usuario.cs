@@ -329,6 +329,43 @@ namespace Logica.Models
 
             Usuario R = new Usuario();
 
+            Conexion MiCnn = new Conexion();
+
+            Crypto crypto = new Crypto();
+            string ContrasenniaEncriptada = crypto.EncriptarEnUnSentido(pContrasennia);
+
+
+
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@usuario", pEmail));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@password", ContrasenniaEncriptada));
+
+            //NECESITO UN DATATABLE PARA CAPTURAR LA INFO DEL USUARIO
+            DataTable dt = new DataTable();
+
+            dt = MiCnn.EjecutarSELECT("SPUsuarioValidarIngreso");
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                //Esta consulta deberia tener solo un registro 
+                //se crea un objeto de tipo DataRow para capturar la info contenida en
+                //index 0 del dt(DataTable)
+                DataRow dr = dt.Rows[0];
+
+                R.UsuarioID = Convert.ToInt32(dr["UsuarioID"]);
+                R.UsuarioNombre = Convert.ToString(dr["UsuarioNombre"]);
+                R.UsuarioCedula = Convert.ToString(dr["UsuarioCedula"]);
+                R.UsuarioCorreo = Convert.ToString(dr["UsuarioCorreo"]);
+                R.UsuarioTelefono = Convert.ToString(dr["UsuarioTelefono"]);
+                R.UsuarioDireccion = Convert.ToString(dr["UsuarioDireccion"]);
+
+                R.UsuarioContrasennia = String.Empty;
+
+                //composiciones
+
+                R.MiRolTipo.UsuarioRolId = Convert.ToInt32(dr["UsuarioRolID"]);
+                R.MiRolTipo.UsuarioRolDescripcion = Convert.ToString(dr["UsuarioRolDescripcion"]);
+
+            }
 
             return R;
 
