@@ -320,7 +320,7 @@ namespace Logica.Models
             R = MiCnn.EjecutarSELECT("SPUsuariosListar");
 
             return R;
-            return R;
+            
 
         }
 

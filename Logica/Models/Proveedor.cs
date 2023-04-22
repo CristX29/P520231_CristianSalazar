@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Logica.Services;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Logica.Models
 {
@@ -17,7 +20,7 @@ namespace Logica.Models
         public string ProveedorNotas { get; set; }
         public bool Activo { get; set; }
 
-        TipoProveedor MiTipoProveedor { get; set; }
+        public TipoProveedor MiTipoProveedor { get; set; }
 
         public Proveedor()
         {
@@ -85,11 +88,15 @@ namespace Logica.Models
 
         }
 
-        public DataTable ListarProveedor(bool VerActivos = true)
+        public DataTable ListarProveedor(bool VerActivos = true, string FiltroBusqueda = " ")
         {
             DataTable R= new DataTable();
+            Conexion MiCnn= new Conexion();
 
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@VerActivos", true));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@FiltroBusqueda", FiltroBusqueda));
 
+            R = MiCnn.EjecutarSELECT("SPProveedorListar");
 
 
             return R;

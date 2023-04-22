@@ -94,6 +94,7 @@ namespace P520231_CristianSalazar.Formularios
 
             Logica.Models.Usuario_Rol MiRol = new Logica.Models.Usuario_Rol();
             DataTable dt = new DataTable();
+
             dt = MiRol.Listar();
 
             if (dt != null && dt.Rows.Count > 0)
@@ -317,7 +318,7 @@ namespace P520231_CristianSalazar.Formularios
 
 
 
-                //estas variables almacenan el resultado de lasa consultas por correo y cedula
+                //estas variables almacenan el resultado de las consultas por correo y cedula
                 bool CedulaOk;
                 bool EmailOK;
 
@@ -418,10 +419,7 @@ namespace P520231_CristianSalazar.Formularios
 
         }
 
-        private void DgLista_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
+       
 
         private void BtnModificar_Click(object sender, EventArgs e)
         {
