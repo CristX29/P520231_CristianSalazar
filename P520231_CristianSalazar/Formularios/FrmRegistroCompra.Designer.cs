@@ -50,10 +50,10 @@
             this.CCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CPrecioVentaUnitario = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.BtnCrearCompra = new System.Windows.Forms.Button();
             this.BtnProductoAgregar = new System.Windows.Forms.ToolStripButton();
             this.BtnProductoEditar = new System.Windows.Forms.ToolStripButton();
             this.BtnProductoEliminar = new System.Windows.Forms.ToolStripButton();
+            this.BtnCrearCompra = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -284,18 +284,6 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // BtnCrearCompra
-            // 
-            this.BtnCrearCompra.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.BtnCrearCompra.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.BtnCrearCompra.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BtnCrearCompra.Location = new System.Drawing.Point(670, 590);
-            this.BtnCrearCompra.Name = "BtnCrearCompra";
-            this.BtnCrearCompra.Size = new System.Drawing.Size(98, 29);
-            this.BtnCrearCompra.TabIndex = 2;
-            this.BtnCrearCompra.Text = "Comprar";
-            this.BtnCrearCompra.UseVisualStyleBackColor = false;
-            // 
             // BtnProductoAgregar
             // 
             this.BtnProductoAgregar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
@@ -323,6 +311,19 @@
             this.BtnProductoEliminar.Name = "BtnProductoEliminar";
             this.BtnProductoEliminar.Size = new System.Drawing.Size(122, 22);
             this.BtnProductoEliminar.Text = "Eliminar Producto";
+            // 
+            // BtnCrearCompra
+            // 
+            this.BtnCrearCompra.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.BtnCrearCompra.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnCrearCompra.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnCrearCompra.Location = new System.Drawing.Point(670, 590);
+            this.BtnCrearCompra.Name = "BtnCrearCompra";
+            this.BtnCrearCompra.Size = new System.Drawing.Size(98, 29);
+            this.BtnCrearCompra.TabIndex = 2;
+            this.BtnCrearCompra.Text = "Comprar";
+            this.BtnCrearCompra.UseVisualStyleBackColor = false;
+            this.BtnCrearCompra.Click += new System.EventHandler(this.BtnCrearCompra_Click);
             // 
             // FrmRegistroCompra
             // 
