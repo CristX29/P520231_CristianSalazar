@@ -81,5 +81,17 @@ namespace P520231_CristianSalazar.Formularios
 
             }
         }
+
+        private void gestionDeProveedorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!Globales.MiFormGestionProveedor.Visible)
+            {
+                Globales.MiFormGestionProveedor = new FrmProveedorGestion();
+                Globales.MiFormGestionProveedor.Show();
+
+            }
+
+
+        }
     }
 }

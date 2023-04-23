@@ -597,5 +597,10 @@ namespace P520231_CristianSalazar.Formularios
         {
             CargarListaDeUsuarios();
         }
+
+        private void BtnCancelar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

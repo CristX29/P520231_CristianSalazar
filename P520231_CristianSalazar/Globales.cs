@@ -14,6 +14,9 @@ namespace P520231_CristianSalazar
     public static Formularios.FrmUsuariosGestion MiFormGestionUsuarios =
          new Formularios.FrmUsuariosGestion();
 
+    public static Formularios.FrmProveedorGestion MiFormGestionProveedor =
+            new Formularios.FrmProveedorGestion();
+
     //debemos tener un objeto de tipo usuario que permita almacenar los datos del usuario que se haya logueado correctamente 
     public static Logica.Models.Usuario MiUsuarioGlobal = new Logica.Models.Usuario();
 

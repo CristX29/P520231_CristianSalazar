@@ -32,7 +32,22 @@ namespace Logica.Models
         {
             bool R = false;
 
+            Conexion MiCnn = new Conexion();
 
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ProveedorNombre", this.ProveedorNombre));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ProveedorCedula", this.ProveedorCedula));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ProveedorEmail", this.ProveedorEmail));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ProveedorDireccion", this.ProveedorDireccion));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Proveedornotas", this.ProveedorNotas));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@TipoRol", this.MiTipoProveedor.ProveedorTipoID));
+
+
+            int resultado = MiCnn.EjecutarInsertUpdateDelete("SPProveedorAgregar");
+
+            if (resultado > 0)
+            {
+                R = true;
+            }
             return R;
 
         }
@@ -104,7 +119,22 @@ namespace Logica.Models
 
         }
         
+        public DataTable ListarProveedorEnGestion(string pFiltroBusqueda)
+        {
 
+            DataTable R = new DataTable();
+            Conexion MiCnn = new Conexion();
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@VerActivos", true));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@FiltroBusqueda", pFiltroBusqueda));
+
+            R = MiCnn.EjecutarSELECT("SPProveedorListarProveedorGestion");
+
+
+
+
+
+            return R;
+        }
 
 
 
