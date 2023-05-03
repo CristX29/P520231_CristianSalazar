@@ -493,7 +493,7 @@ namespace P520231_CristianSalazar.Formularios
                     {
                         if (MiUsuarioLocal.Eliminar())
                         {
-                            MessageBox.Show("El Usuario ha sido eliminado correctamente", "!!!", MessageBoxButtons.OK);
+                            MessageBox.Show("El Usuario ha sido eliminado correctamente de el programa", "!!!", MessageBoxButtons.OK);
                             LimpiarFormulario();
                             CargarListaDeUsuarios();
                         }
